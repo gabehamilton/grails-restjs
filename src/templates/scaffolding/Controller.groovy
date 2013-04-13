@@ -1,5 +1,10 @@
 <%=packageName ? "package ${packageName}\n\n" : ''%>import org.springframework.dao.DataIntegrityViolationException
 
+import javax.servlet.http.HttpServletResponse
+import grails.converters.JSON
+import grails.converters.XML
+import org.codehaus.groovy.grails.web.json.JSONException
+
 /**
  * ${className}Controller
  * A controller class handles incoming web requests and performs actions such as redirects, rendering views and so on.
@@ -14,7 +19,20 @@ class ${className}Controller {
 
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [${propertyName}List: ${className}.list(params), ${propertyName}Total: ${className}.count()]
+		List<${className}> ${propertyName}List = ${className}.list(params)
+		Integer ${propertyName}Total = ${className}.count()
+		request.withFormat {
+			//todo Add form & multipartForm for filter submissions
+			html {
+				[${propertyName}List: ${propertyName}List, ${propertyName}Total: ${propertyName}Total]
+			}
+			json {
+				render ${propertyName}List as JSON
+			}
+			xml {
+				render ${propertyName}List as XML
+			}
+		}
     }
 
     def create() {
@@ -22,32 +40,119 @@ class ${className}Controller {
     }
 
     def save() {
+		request.withFormat{
+			html {}
+			json {
+				def text = request?.inputStream?.text
+				if(text) {
+					try {
+						JSON.parse(text).entrySet().each {
+							params.put it.key, it.value
+						  }
+					} catch (JSONException ignored) {}
+				}
+			}
+			xml {
+				//todo
+			}
+		}
         def ${propertyName} = new ${className}(params)
         if (!${propertyName}.save(flush: true)) {
-            render(view: "create", model: [${propertyName}: ${propertyName}])
+			request.withFormat {
+				//todo add form & multipartForm
+				html {
+					render(view: "create", model: [${propertyName}: ${propertyName}])
+				}
+				json {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST)
+					render ${propertyName}.errors as JSON
+				}
+				xml {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST)
+					render ${propertyName}.errors as XML
+				}
+			}
             return
         }
-
 		flash.message = message(code: 'default.created.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), ${propertyName}.id])
-        redirect(action: "show", id: ${propertyName}.id)
+
+		def htmlResult = {
+			redirect(action: "show", id: ${propertyName}.id)
+		}
+
+		request.withFormat{
+			form { htmlResult() }
+			html { htmlResult() }
+			multipartForm { htmlResult() }
+			json {
+				response.setStatus(HttpServletResponse.SC_CREATED)
+				render ${propertyName} as JSON
+			}
+			xml {
+				response.setStatus(HttpServletResponse.SC_CREATED)
+				render ${propertyName} as XML
+			}
+		}
     }
 
     def show() {
+		println "in show"
         def ${propertyName} = ${className}.get(params.id)
         if (!${propertyName}) {
+			println "not found"
 			flash.message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
-            redirect(action: "list")
+			request.withFormat {
+				// is it possible to need form?
+				html {
+					flash.message = message
+					redirect(action: "list")
+				}
+				json {
+					response.sendError(HttpServletResponse.SC_NOT_FOUND)
+					render "{error: '\${message}'}"
+				}
+				xml {
+					response.sendError(HttpServletResponse.SC_NOT_FOUND)
+					render "<error>\${message}</error>"
+				}
+			}
             return
         }
 
-        [${propertyName}: ${propertyName}]
+		request.withFormat {
+			html {
+				println ${propertyName}
+				[${propertyName}: ${propertyName}]
+			}
+			json {
+				def o = ${propertyName}.get(params.id)
+				render o as JSON
+			}
+			xml {
+				def o = ${propertyName}.get(params.id)
+				render o as XML
+			}
+		}
     }
 
     def edit() {
         def ${propertyName} = ${className}.get(params.id)
         if (!${propertyName}) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
-            redirect(action: "list")
+			// todo factor out into notFound method
+			String message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
+			// todo form?
+			html {
+				flash.message = message
+				redirect(action: "list")
+			}
+			json {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				render "{error: '\${message}'}"
+			}
+			xml {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				render "<error>\${message}</error>"
+			}
             return
         }
 
@@ -55,10 +160,38 @@ class ${className}Controller {
     }
 
     def update() {
+		request.withFormat{
+			html {}
+			json {
+				def text = request?.inputStream?.text
+				if(text) {
+					try {
+						JSON.parse(text).entrySet().each {
+							params.put it.key, it.value
+						}
+					} catch (JSONException ignored) {}
+				}
+			}
+			xml {} // todo
+		}
+
         def ${propertyName} = ${className}.get(params.id)
         if (!${propertyName}) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
-            redirect(action: "list")
+			// todo factor out into notFound method
+			String message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
+			// todo form?
+			html {
+				flash.message = message
+				redirect(action: "list")
+			}
+			json {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				render "{error: '\${message}'}"
+			}
+			xml {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				render "<error>\${message}</error>"
+			}
             return
         }
 
@@ -68,7 +201,22 @@ class ${className}Controller {
                 ${propertyName}.errors.rejectValue("version", "default.optimistic.locking.failure",
                           [message(code: '${domainClass.propertyName}.label', default: '${className}')] as Object[],
                           "Another user has updated this ${className} while you were editing")
-                render(view: "edit", model: [${propertyName}: ${propertyName}])
+				request.withFormat {
+					html {
+						${propertyName}.errors.rejectValue("version", "default.optimistic.locking.failure",
+                 			[message(code: '${domainClass.propertyName}.label', default: '${className}')] as Object[],
+                 			"Another user has updated this ${className} while you were editing")
+						render(view: "edit", model: [${propertyName}: ${propertyName}])
+					}
+					json {
+						response.sendError(HttpServletResponse.SC_CONFLICT)
+						render "{error: 'Another user has updated this ${className} while you were editing'}"
+					}
+					xml {
+						response.sendError(HttpServletResponse.SC_CONFLICT)
+						render "<error>Another user has updated this ${className} while you were editing</error>"
+					}
+				}
                 return
             }
         }
@@ -76,19 +224,54 @@ class ${className}Controller {
         ${propertyName}.properties = params
 
         if (!${propertyName}.save(flush: true)) {
-            render(view: "edit", model: [${propertyName}: ${propertyName}])
+			request.withFormat {
+				html {
+					render(view: "edit", model: [${propertyName}: ${propertyName}])
+				}
+				json {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST)
+					render ${propertyName}.errors as JSON
+				}
+				xml {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST)
+					render ${propertyName}.errors as XML
+				}
+			}
             return
         }
 
-		flash.message = message(code: 'default.updated.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), ${propertyName}.id])
-        redirect(action: "show", id: ${propertyName}.id)
+		request.withFormat{
+			form {
+				flash.message = message(code: 'default.updated.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), ${propertyName}.id])
+				redirect(action: "show", id: ${propertyName}.id)
+			}
+			json {
+				render ${propertyName} as JSON
+			}
+			xml {
+				render ${propertyName} as XML
+			}
+		}
     }
 
     def delete() {
         def ${propertyName} = ${className}.get(params.id)
         if (!${propertyName}) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
-            redirect(action: "list")
+			// todo factor out into notFound method
+			String message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
+			// todo form?
+			html {
+				flash.message = message
+				redirect(action: "list")
+			}
+			json {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				render "{error: '\${message}'}"
+			}
+			xml {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				render "<error>\${message}</error>"
+			}
             return
         }
 
