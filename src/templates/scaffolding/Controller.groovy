@@ -21,12 +21,14 @@ class ${className}Controller {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		List<${className}> ${propertyName}List = ${className}.list(params)
 		Integer ${propertyName}Total = ${className}.count()
-		request.withFormat {
+		println "format is " + request.format + ', ' + response.format
+		withFormat {
 			//todo Add form & multipartForm for filter submissions
 			html {
 				[${propertyName}List: ${propertyName}List, ${propertyName}Total: ${propertyName}Total]
 			}
 			json {
+				println "format json"
 				render ${propertyName}List as JSON
 			}
 			xml {
@@ -40,7 +42,7 @@ class ${className}Controller {
     }
 
     def save() {
-		request.withFormat{
+		withFormat{
 			html {}
 			json {
 				def text = request?.inputStream?.text
@@ -58,7 +60,7 @@ class ${className}Controller {
 		}
         def ${propertyName} = new ${className}(params)
         if (!${propertyName}.save(flush: true)) {
-			request.withFormat {
+			withFormat {
 				//todo add form & multipartForm
 				html {
 					render(view: "create", model: [${propertyName}: ${propertyName}])
@@ -80,7 +82,7 @@ class ${className}Controller {
 			redirect(action: "show", id: ${propertyName}.id)
 		}
 
-		request.withFormat{
+		withFormat{
 			form { htmlResult() }
 			html { htmlResult() }
 			multipartForm { htmlResult() }
@@ -101,7 +103,7 @@ class ${className}Controller {
         if (!${propertyName}) {
 			println "not found"
 			flash.message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
-			request.withFormat {
+			withFormat {
 				// is it possible to need form?
 				html {
 					flash.message = message
@@ -119,7 +121,7 @@ class ${className}Controller {
             return
         }
 
-		request.withFormat {
+		withFormat {
 			html {
 				println ${propertyName}
 				[${propertyName}: ${propertyName}]
@@ -160,7 +162,7 @@ class ${className}Controller {
     }
 
     def update() {
-		request.withFormat{
+		withFormat{
 			html {}
 			json {
 				def text = request?.inputStream?.text
@@ -201,7 +203,7 @@ class ${className}Controller {
                 ${propertyName}.errors.rejectValue("version", "default.optimistic.locking.failure",
                           [message(code: '${domainClass.propertyName}.label', default: '${className}')] as Object[],
                           "Another user has updated this ${className} while you were editing")
-				request.withFormat {
+				withFormat {
 					html {
 						${propertyName}.errors.rejectValue("version", "default.optimistic.locking.failure",
                  			[message(code: '${domainClass.propertyName}.label', default: '${className}')] as Object[],
@@ -224,7 +226,7 @@ class ${className}Controller {
         ${propertyName}.properties = params
 
         if (!${propertyName}.save(flush: true)) {
-			request.withFormat {
+			withFormat {
 				html {
 					render(view: "edit", model: [${propertyName}: ${propertyName}])
 				}
@@ -240,7 +242,7 @@ class ${className}Controller {
             return
         }
 
-		request.withFormat{
+		withFormat{
 			form {
 				flash.message = message(code: 'default.updated.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), ${propertyName}.id])
 				redirect(action: "show", id: ${propertyName}.id)

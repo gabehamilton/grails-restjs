@@ -1,0 +1,8 @@
+{
+    "directories": {},
+    "dependencies": {
+        "dgrid": "0.3.7",
+        "put-selector": "0.3.4",
+        "xstyle": "0.1.3"
+    }
+}
