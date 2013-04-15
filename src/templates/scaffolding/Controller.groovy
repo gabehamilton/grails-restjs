@@ -18,14 +18,25 @@ class ${className}Controller {
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+		// Range: items=0-24
+		String range = request.getHeader('Range')
+		if(range) {
+			String[] ranges = range.substring("items=".length()).split("-")
+			params.offset = Integer.valueOf(ranges[0])
+			params.max = Integer.valueOf(ranges[1]) - params.offset + 1
+			println "Set from Range: \$range :" + params.offset + ', ' + params.max
+		}
+
+		params.max = Math.min(params.max ? params.int('max') : 10, 100)
+		params.offset = params.offset ? params.int('offset') : 0
 		List<${className}> ${propertyName}List = ${className}.list(params)
-		Integer ${propertyName}Total = ${className}.count()
+		Integer total = ${className}.count()
 		println "format is " + request.format + ', ' + response.format
+		response.setHeader('Content-Range', "items \${params.offset}-\${params.max + params.offset -1}/\$total")
 		withFormat {
 			//todo Add form & multipartForm for filter submissions
 			html {
-				[${propertyName}List: ${propertyName}List, ${propertyName}Total: ${propertyName}Total]
+				[${propertyName}List: ${propertyName}List, ${propertyName}Total: total]
 			}
 			json {
 				println "format json"

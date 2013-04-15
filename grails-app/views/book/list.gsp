@@ -8,9 +8,13 @@
 	<title><g:message code="default.list.label" args="[entityName]" /></title>
 
 	<g:set var="jsHome" value="${request.contextPath}/js/"/>
-	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/resources/dojo.css">
-	<link rel="stylesheet" href="${jsHome}dgrid/css/dgrid.css">
-	<link rel="stylesheet" href="${jsHome}dgrid/css/skins/claro.css">
+	<style>
+	.dgrid-sortable {color: #0088cc;}
+	.dgrid-sortable:hover {text-decoration:underline;}
+	</style>
+	%{--<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/resources/dojo.css">--}%
+	%{--<link rel="stylesheet" href="${jsHome}dgrid/css/dgrid.css">--}%
+	%{--<link rel="stylesheet" href="${jsHome}dgrid/css/skins/claro.css">--}%
 	<script>
 			var dojoConfig;
 			(function(){
@@ -22,6 +26,7 @@
 						{ name: "dgrid", location: baseUrl + "dgrid" },
 						{ name: "xstyle", location: baseUrl + "xstyle" },
 						{ name: "put-selector", location: baseUrl + "put-selector" }
+//						,{ name: 'dbootstrap', location: baseUrl + 'dbootstrap'}
 					]
 				};
 			}());
@@ -80,37 +85,40 @@
 	</script>
 </head>
 
-<body class="claro">
+<body>
 <section id="list-book" class="first">
 
 	<div id="grid"></div>
+	%{--<button onclick='deleteSelected()'>Delete Selected</button>--}%
+	%{--<button onclick='grid.save();'>Save</button>--}%
+	%{--<button onclick='grid.revert();'>Revert</button>--}%
 
-	%{--<table class="table table-bordered">--}%
-		%{--<thead>--}%
-			%{--<tr>--}%
-			%{----}%
-				%{--<g:sortableColumn property="name" title="${message(code: 'book.name.label', default: 'Name')}" />--}%
-			%{----}%
-				%{--<g:sortableColumn property="price" title="${message(code: 'book.price.label', default: 'Price')}" />--}%
-			%{----}%
-			%{--</tr>--}%
-		%{--</thead>--}%
-		%{--<tbody>--}%
-		%{--<g:each in="${bookList}" status="i" var="book">--}%
-			%{--<tr class="${(i % 2) == 0 ? 'odd' : 'even'}">--}%
-			%{----}%
-				%{--<td><g:link action="show" id="${book.id}">${fieldValue(bean: book, field: "name")}</g:link></td>--}%
-			%{----}%
-				%{--<td>${fieldValue(bean: book, field: "price")}</td>--}%
-			%{----}%
-			%{--</tr>--}%
-		%{--</g:each>--}%
-		%{--</tbody>--}%
-	%{--</table>--}%
+	<table class="table table-bordered">
+		<thead>
+			<tr>
 
-	%{--<div class="pagination">--}%
-		%{--<bs:paginate total="${bookTotal}" />--}%
-	%{--</div>--}%
+				<g:sortableColumn property="name" title="${message(code: 'book.name.label', default: 'Name')}" />
+
+				<g:sortableColumn property="price" title="${message(code: 'book.price.label', default: 'Price')}" />
+
+			</tr>
+		</thead>
+		<tbody>
+		<g:each in="${bookList}" status="i" var="book">
+			<tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+
+				<td><g:link action="show" id="${book.id}">${fieldValue(bean: book, field: "name")}</g:link></td>
+
+				<td>${fieldValue(bean: book, field: "price")}</td>
+
+			</tr>
+		</g:each>
+		</tbody>
+	</table>
+
+	<div class="pagination">
+		<bs:paginate total="${bookTotal}" />
+	</div>
 </section>
 
 </body>
