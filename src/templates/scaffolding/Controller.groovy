@@ -18,20 +18,27 @@ class ${className}Controller {
     }
 
     def list() {
-		// Range: items=0-24
 		String range = request.getHeader('Range')
 		if(range) {
 			String[] ranges = range.substring("items=".length()).split("-")
 			params.offset = Integer.valueOf(ranges[0])
 			params.max = Integer.valueOf(ranges[1]) - params.offset + 1
-			println "Set from Range: \$range :" + params.offset + ', ' + params.max
 		}
-
+		String sort = params.sort
+		if(sort) {
+			if(sort.startsWith('+') || sort.startsWith(' ')) {
+				params.sort = sort.substring(1)
+				params.order = 'asc'
+			}
+			else if(sort.startsWith('-')) {
+				params.sort = sort.substring(1)
+				params.order = 'desc'
+			}
+		}
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		params.offset = params.offset ? params.int('offset') : 0
 		List<${className}> ${propertyName}List = ${className}.list(params)
 		Integer total = ${className}.count()
-		println "format is " + request.format + ', ' + response.format
 		response.setHeader('Content-Range', "items \${params.offset}-\${params.max + params.offset -1}/\$total")
 		withFormat {
 			//todo Add form & multipartForm for filter submissions
@@ -39,7 +46,6 @@ class ${className}Controller {
 				[${propertyName}List: ${propertyName}List, ${propertyName}Total: total]
 			}
 			json {
-				println "format json"
 				render ${propertyName}List as JSON
 			}
 			xml {
@@ -109,10 +115,8 @@ class ${className}Controller {
     }
 
     def show() {
-		println "in show"
         def ${propertyName} = ${className}.get(params.id)
         if (!${propertyName}) {
-			println "not found"
 			flash.message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.id])
 			withFormat {
 				// is it possible to need form?
@@ -134,7 +138,6 @@ class ${className}Controller {
 
 		withFormat {
 			html {
-				println ${propertyName}
 				[${propertyName}: ${propertyName}]
 			}
 			json {

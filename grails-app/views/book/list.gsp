@@ -8,13 +8,15 @@
 	<title><g:message code="default.list.label" args="[entityName]" /></title>
 
 	<g:set var="jsHome" value="${request.contextPath}/js/"/>
+	%{--<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/resources/dojo.css">--}%
+	<link rel="stylesheet" href="${jsHome}dgrid/css/dgrid.css">
+	%{--<link rel="stylesheet" href="${jsHome}dgrid/css/skins/claro.css">--}%
 	<style>
+	.dgrid-cell-padding {padding: 8px;}
 	.dgrid-sortable {color: #0088cc;}
 	.dgrid-sortable:hover {text-decoration:underline;}
+	#grid { height: 20em}
 	</style>
-	%{--<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/resources/dojo.css">--}%
-	%{--<link rel="stylesheet" href="${jsHome}dgrid/css/dgrid.css">--}%
-	%{--<link rel="stylesheet" href="${jsHome}dgrid/css/skins/claro.css">--}%
 	<script>
 			var dojoConfig;
 			(function(){
@@ -36,8 +38,9 @@
 		require(["dgrid/List", "dgrid/OnDemandGrid","dgrid/Selection", "dgrid/editor", "dgrid/Keyboard", "dgrid/tree", "dojo/_base/declare", "dojo/store/JsonRest", "dojo/store/Observable", "dojo/store/Cache", "dojo/store/Memory", "dojo/domReady!"],
 			function(List, Grid, Selection, editor, Keyboard, tree, declare, JsonRest, Observable, Cache, Memory){
 				var testStore = Observable(Cache(JsonRest({
-					target:"./list",
+					target:"./",
 					idProperty: "id"
+					,sortParam: 'sort'
 //					,query: function(query, options){
 ////						// have to manually adjust the query to get rid of the double ?? that trips php up
 ////						if(query.parent){
@@ -56,12 +59,13 @@
 //					editor({label:'Boolean', field:'boo', sortable: false, autoSave: true}, "checkbox")
 //				];
 
-				var columns = [
-				]
+				var columns = {name: "Name", price: "Price"}; //todo need a column that links to show
 				window.grid = new (declare([Grid, Selection, Keyboard]))({
 					store: testStore,
-					getBeforePut: false,
-					columns: {name: "Name", price: "Price"}
+					getBeforePut: false
+					,columns: columns
+					,loadingMessage: "Loading data..."
+					,noDataMessage: "No results found."
 				}, "grid");
 //				deleteSelected = function(){
 //					for(var i in grid.selection){
@@ -92,33 +96,6 @@
 	%{--<button onclick='deleteSelected()'>Delete Selected</button>--}%
 	%{--<button onclick='grid.save();'>Save</button>--}%
 	%{--<button onclick='grid.revert();'>Revert</button>--}%
-
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-
-				<g:sortableColumn property="name" title="${message(code: 'book.name.label', default: 'Name')}" />
-
-				<g:sortableColumn property="price" title="${message(code: 'book.price.label', default: 'Price')}" />
-
-			</tr>
-		</thead>
-		<tbody>
-		<g:each in="${bookList}" status="i" var="book">
-			<tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-
-				<td><g:link action="show" id="${book.id}">${fieldValue(bean: book, field: "name")}</g:link></td>
-
-				<td>${fieldValue(bean: book, field: "price")}</td>
-
-			</tr>
-		</g:each>
-		</tbody>
-	</table>
-
-	<div class="pagination">
-		<bs:paginate total="${bookTotal}" />
-	</div>
 </section>
 
 </body>
