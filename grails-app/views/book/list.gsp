@@ -59,8 +59,8 @@
 //					editor({label:'Boolean', field:'boo', sortable: false, autoSave: true}, "checkbox")
 //				];
 
-				var columns = {name: "Name", price: "Price", quantity: "Qty"}; //todo need a column that links to show
-				window.grid = new (declare([Grid, Selection, Keyboard]))({
+				var columns = {name: editor({label: "Name"}, "text", "dblclick"), price: "Price", quantity: "Qty"}; //todo need a column that links to show
+				window.grid = new (declare([Grid, Selection, Keyboard, editor]))({
 					store: testStore,
 					getBeforePut: false
 					,columns: columns
@@ -94,7 +94,7 @@
 
 	<div id="grid"></div>
 	%{--<button onclick='deleteSelected()'>Delete Selected</button>--}%
-	%{--<button onclick='grid.save();'>Save</button>--}%
+	<button onclick='grid.save();'>Save</button>
 	%{--<button onclick='grid.revert();'>Revert</button>--}%
 </section>
 
