@@ -8,6 +8,8 @@ class Book {
 
 	String name
 	BigDecimal price
+	Integer quantity
+
 
 	/* Default (injected) attributes of GORM */
 //	Long	id
@@ -26,6 +28,7 @@ class Book {
     }
     
 	static constraints = {
+		quantity(nullable: true)
     }
 	
 	/*

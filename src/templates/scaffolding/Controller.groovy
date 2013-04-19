@@ -301,4 +301,17 @@ class ${className}Controller {
             redirect(action: "show", id: params.id)
         }
     }
+
+//	//todo try this out instead of  def ${propertyName} = ${className}.get(params.id)... if exists ... not found
+//	def withObject(object=this.getClass().getName()-"Controller", id="id", Closure c) {
+//		assert object
+//		def obj =  grailsApplication.classLoader.loadClass(object).get(params[id])
+//		if(obj) {
+//			c.call obj
+//		} else {
+//		    //todo replace with notFound
+//			flash.message = "The object was not found"
+//			redirect action: "list"
+//		}
+//	}
 }

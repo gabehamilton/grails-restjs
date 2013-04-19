@@ -59,7 +59,7 @@
 //					editor({label:'Boolean', field:'boo', sortable: false, autoSave: true}, "checkbox")
 //				];
 
-				var columns = {name: "Name", price: "Price"}; //todo need a column that links to show
+				var columns = {name: "Name", price: "Price", quantity: "Qty"}; //todo need a column that links to show
 				window.grid = new (declare([Grid, Selection, Keyboard]))({
 					store: testStore,
 					getBeforePut: false

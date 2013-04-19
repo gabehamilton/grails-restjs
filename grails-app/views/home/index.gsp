@@ -8,22 +8,9 @@
 <body>
 
 	<section id="intro" class="first">
-		<h1>Welcome to Grails using Kickstart with Bootstrap</h1>
-		<p>Congratulations, you have successfully started your first
-			Grails application with the Kickstart extension! At the moment this
-			is the default page, feel free to modify it to either redirect to a
-			controller or display whatever content you may choose. Below is a
-			list of controllers that are currently deployed in this application,
-			click on each to execute its default action:</p>
-		<h2>Introduction</h2>
-		<p>Kickstart is an extension for Grails in order to start your
-			project with a good looking frontend. It is intended to be used in
-			rapid application scenarios such as a Startup Weekend or a
-			prototyping session with a customer. This plugin provides adapted
-			scaffolding templates for standard CRUD pages using the Bootstrap web
-			page template by Twitter. Additionally, Kickstart includes some
-			general GSPs pages (e.g., about.gsp), a minimal logging/orientation
-			Filter, and a language switcher.</p>
+		<h1>Welcome to Grails Rest-JS</h1>
+		<p>This scaffolding is data free, meaning the output can be safely cached on a Content Distribution Network
+		or bundled into a mobile app with PhoneGap</p>
 	</section>
 
 	<section id="info">
