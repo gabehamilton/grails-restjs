@@ -23,14 +23,22 @@ class UrlMappings {
             view		= { 'index' }
         }
 
-		"/$controller/$id?"(resource:"$controller")
+		"/$controller/" {action = "list"}
 
-		"/$controller/$action?/$id?"{
+		"/$controller/$id" (parseRequest: true){
+			action = [GET: "show", PUT: "update", DELETE: "delete", POST: "save"]
 			constraints {
+				id(matches: /\d+/) // todo UUID?
+			}
+		}
+
+		"/$controller/$action/$id?"{
+			constraints {
+				action(matches: /[A-z]+.*/)
 				controller(matches:/^((?!(api|mobile|web)).*)$/)
 		  	}
 		}
-		
+
 		/* 
 		 * System Pages without controller 
 		 */

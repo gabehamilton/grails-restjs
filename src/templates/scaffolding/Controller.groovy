@@ -11,7 +11,7 @@ import org.codehaus.groovy.grails.web.json.JSONException
  */
 class ${className}Controller {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [list: "GET", show: "GET", save: "POST", update: ["POST", "PUT"], delete: ["POST", "DELETE"]]
 
     def index() {
         redirect(action: "list", params: params)
@@ -179,10 +179,18 @@ class ${className}Controller {
 		withFormat{
 			html {}
 			json {
-				def text = request?.inputStream?.text
-				if(text) {
+				def body
+				if(request.JSON) {
+					body = request.JSON
+				}
+				else {
+					body = request?.inputStream?.text
+					if(body)
+						body = JSON.parse(body)
+				}
+				if(body) {
 					try {
-						JSON.parse(text).entrySet().each {
+						body.entrySet().each {
 							params.put it.key, it.value
 						}
 					} catch (JSONException ignored) {}
