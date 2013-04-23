@@ -22,9 +22,11 @@
 		margin-left: 60px;
 		margin-right: 60px;
 	}
+	.dgrid {border: 0}
 	.dgrid-cell-padding {padding: 8px;}
 	.dgrid-sortable {color: #0088cc;}
 	.dgrid-sortable:hover {text-decoration:underline;}
+	.dgrid-cell {border: 0}
 	#grid { height: 25em}
 	#grid .field-id {width: 2em;}
 	#grid .field-name {width: 15em;}
