@@ -1,19 +1,12 @@
 package grails.restjs
 
 /**
- * Book
+ * Author
  * A domain class describes the data object and it's mapping to the database
  */
-class Book {
-
-	String name
-	BigDecimal price
-	Integer quantity
-	String color
-	Integer numberOfPages
-	Date pubDate
-	Boolean hardback = false
-
+class Author {
+	String firstName
+	String lastName
 
 	/* Default (injected) attributes of GORM */
 //	Long	id
@@ -23,19 +16,15 @@ class Book {
 //	Date	dateCreated
 //	Date	lastUpdated
 	
-	static belongsTo	= [Author]	// tells GORM to cascade commands: e.g., delete this object if the "parent" is deleted.
+//	static belongsTo	= []	// tells GORM to cascade commands: e.g., delete this object if the "parent" is deleted.
 //	static hasOne		= []	// tells GORM to associate another domain object as an owner in a 1-1 mapping
-	static hasMany		= [authors:Author]	// tells GORM to associate other domain objects for a 1-n or n-m mapping
+	static hasMany		= [books:Book]	// tells GORM to associate other domain objects for a 1-n or n-m mapping
 //	static mappedBy		= []	// specifies which property should be used in a mapping 
 	
     static mapping = {
     }
     
 	static constraints = {
-		quantity(nullable: true)
-		color(nullable: true)
-		numberOfPages(nullable: true)
-		pubDate(nullable: true)
     }
 	
 	/*

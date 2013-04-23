@@ -1,3 +1,5 @@
+import org.codehaus.groovy.grails.scaffolding.view.ScaffoldingViewResolver
+
 includeTargets << grailsScript("_GrailsBootstrap")
 includeTargets << grailsScript("_GrailsCreateArtifacts")
 
@@ -28,6 +30,13 @@ target(main: "Create a controller for each domain class") {
 		event("StatusFinal", ["No domain classes found"])
 	}
 
+}
+
+target(clearScaffolding: "Clear scaffolded views") {
+	ScaffoldingViewResolver.clearViewCache()
+ 	println "Scaffolded views cleared"
+// http://svn.codehaus.org/grails/tags/builds/build.475/src/groovy/org/codehaus/groovy/grails/scaffolding/plugins/ScaffoldingGrailsPlugin.groovy
+	// can we regen scaffolding?
 }
 
 setDefaultTarget(main)

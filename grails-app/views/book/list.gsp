@@ -9,6 +9,7 @@
 
 	<g:set var="jsHome" value="${request.contextPath}/js/"/>
 	%{--<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/resources/dojo.css">--}%
+	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dijit/themes/claro/claro.css">
 	<link rel="stylesheet" href="${jsHome}dgrid/css/dgrid.css">
 	%{--<link rel="stylesheet" href="${jsHome}dgrid/css/skins/claro.css">--}%
 	<style>
@@ -24,7 +25,11 @@
 	.dgrid-cell-padding {padding: 8px;}
 	.dgrid-sortable {color: #0088cc;}
 	.dgrid-sortable:hover {text-decoration:underline;}
-	#grid { height: 20em}
+	#grid { height: 25em}
+	#grid .field-id {width: 2em;}
+	#grid .field-name {width: 15em;}
+	#grid .field-edit {width: 3em;}
+	#grid .field-delete {width: 4em;}
 	</style>
 	<script>
 			var dojoConfig;
@@ -45,9 +50,9 @@
 		<script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/dojo.js"></script>
 	<script>
 		require(["dgrid/List", "dgrid/OnDemandGrid","dgrid/Selection", "dgrid/editor", "dgrid/Keyboard", "dgrid/tree", 'dgrid/extensions/ColumnResizer',
-
+			"dijit/form/DateTextBox", "dijit/form/HorizontalSlider", "dijit/form/NumberSpinner",
 			"dojo/_base/declare", "dojo/store/JsonRest", "dojo/store/Observable", "dojo/store/Cache", "dojo/store/Memory", "dojo/domReady!"],
-			function(List, Grid, Selection, editor, Keyboard, tree, ColumnResizer, declare, JsonRest, Observable, Cache, Memory){
+			function(List, Grid, Selection, editor, Keyboard, tree, ColumnResizer, DateTextBox, Slider, NumberSpinner, declare, JsonRest, Observable, Cache, Memory){
 				var restStore = Observable(Cache(JsonRest({
 					target:"./",
 					idProperty: "id"
@@ -59,6 +64,12 @@
 ////						}
 //						return JsonRest.prototype.query.call(this, query, options);
 //					}
+//					,getChildren: function(parent, options){
+//						return this.query({}, options);
+//					}
+//					,mayHaveChildren: function(parent){
+//						return parent.type != "city";
+//					},
 				}), Memory()));
 //				testStore.getChildren = function(parent, options){
 //					return testStore.query({parent: parent.id}, options);
@@ -73,18 +84,27 @@
 //					editor({label:'Boolean', field:'boo', sortable: false, autoSave: true}, "checkbox")
 //				];
 
-				var columns = {name: editor({label: "Name", autoSave: "true"}, "text", "dblclick"),
-					price: "Price",
-					quantity: "Qty",
+				var columns = { // Slider, NumberSpinner, DateTextBox
+					id: {label: 'ID',
+						renderCell: function(obj, data, td, options) {
+								var str = '<a>' + obj.id + '</a>';
+								td.innerHTML = str;
+						}},
+					name: editor({label: "Name", autoSave: "true"}, "text", "dblclick"),
+					price: editor({label: "Price", autoSave: "true"}, Slider),
+					quantity: editor({label: "Qty", autoSave: "true", editorArgs: {style: 'width: 5em;'}}, NumberSpinner),
+					pubDate: editor({label: "Pub Date", autoSave: "true"}, DateTextBox, "focus"),
+					hardback: editor({label:'Hardback', autoSave: true}, "checkbox"),
 					edit: {label: 'Edit', sortable: false,
 						renderCell: function(obj, data, td, options) {
-											var str = '<span>';
-											str += '<img class="dijitEdit ';
-											str += '" alt="" src="' + require.toUrl("dojo/resources/blank.gif") + '"/>Edit';
-											str += '</span>';
-											td.innerHTML = str;
+								var str = '<a><i class="icon-pencil icon-large" alt="Edit"></i></a>';
+								td.innerHTML = str;
 						}},
-					delete: {label: 'Delete', sortable: false},
+					delete: {label: 'Delete', sortable: false,
+						renderCell: function(obj, data, td, options) {
+								var str = '<a><i class="icon-remove icon-large" alt="Delete"></i></a>';
+								td.innerHTML = str;
+					}},
 					authors: new tree({name:'Author'})
 					}; //todo need a column that links to show
 //						renderCell: function(obj, data, td, options) {
@@ -125,10 +145,10 @@
 	</script>
 </head>
 
-<body>
+<body class="claro">
 <section id="list-book" class="first">
 
-	<div id="grid"></div>
+	<div id="grid" class="claro"></div>
 	%{--<button onclick='deleteSelected()'>Delete Selected</button>--}%
 	%{--<button onclick='grid.save();'>Save</button>--}%
 	%{--<button onclick='grid.revert();'>Revert</button>--}%
