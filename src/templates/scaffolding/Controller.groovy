@@ -83,11 +83,11 @@ class ${className}Controller {
 					render(view: "create", model: [${propertyName}: ${propertyName}])
 				}
 				json {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST)
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST)
 					render ${propertyName}.errors as JSON
 				}
 				xml {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST)
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST)
 					render ${propertyName}.errors as XML
 				}
 			}
@@ -125,11 +125,11 @@ class ${className}Controller {
 					redirect(action: "list")
 				}
 				json {
-					response.sendError(HttpServletResponse.SC_NOT_FOUND)
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 					render "{error: '\${message}'}"
 				}
 				xml {
-					response.sendError(HttpServletResponse.SC_NOT_FOUND)
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 					render "<error>\${message}</error>"
 				}
 			}
@@ -162,11 +162,11 @@ class ${className}Controller {
 				redirect(action: "list")
 			}
 			json {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 				render "{error: '\${message}'}"
 			}
 			xml {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 				render "<error>\${message}</error>"
 			}
             return
@@ -209,11 +209,11 @@ class ${className}Controller {
 				redirect(action: "list")
 			}
 			json {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 				render "{error: '\${message}'}"
 			}
 			xml {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 				render "<error>\${message}</error>"
 			}
             return
@@ -233,11 +233,11 @@ class ${className}Controller {
 						render(view: "edit", model: [${propertyName}: ${propertyName}])
 					}
 					json {
-						response.sendError(HttpServletResponse.SC_CONFLICT)
+						response.setStatus(HttpServletResponse.SC_CONFLICT)
 						render "{error: 'Another user has updated this ${className} while you were editing'}"
 					}
 					xml {
-						response.sendError(HttpServletResponse.SC_CONFLICT)
+						response.setStatus(HttpServletResponse.SC_CONFLICT)
 						render "<error>Another user has updated this ${className} while you were editing</error>"
 					}
 				}
@@ -253,11 +253,11 @@ class ${className}Controller {
 					render(view: "edit", model: [${propertyName}: ${propertyName}])
 				}
 				json {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST)
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST)
 					render ${propertyName}.errors as JSON
 				}
 				xml {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST)
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST)
 					render ${propertyName}.errors as XML
 				}
 			}
@@ -289,11 +289,11 @@ class ${className}Controller {
 				redirect(action: "list")
 			}
 			json {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 				render "{error: '\${message}'}"
 			}
 			xml {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND)
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 				render "<error>\${message}</error>"
 			}
             return
