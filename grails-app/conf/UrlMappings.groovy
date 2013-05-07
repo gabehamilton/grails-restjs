@@ -23,10 +23,12 @@ class UrlMappings {
             view		= { 'index' }
         }
 
-		"/$controller/" {action = "list"}
+		"/$controller/" {
+			action = [GET: "list", POST: "save"]
+		}
 
 		"/$controller/$id" (parseRequest: true){
-			action = [GET: "show", PUT: "update", DELETE: "delete", POST: "save"]
+			action = [GET: "show", PUT: "update", DELETE: "delete"]
 			constraints {
 				id(matches: /\d+/) // todo UUID?
 			}

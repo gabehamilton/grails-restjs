@@ -106,8 +106,8 @@
 						renderCell: function(obj, data, td, options) {
 								var str = '<a><i class="icon-remove icon-large" alt="Delete"></i></a>';
 								td.innerHTML = str;
-					}},
-					authors: new tree({name:'Author'})
+					}}
+					,authors: new tree({name:'Author'})
 					}; //todo need a column that links to show
 //						renderCell: function(obj, data, td, options) {
 //											var strClass = 'dijitEdit';//obj.dir ? 'dijitFolderClosed' : 'dijitLeaf';
