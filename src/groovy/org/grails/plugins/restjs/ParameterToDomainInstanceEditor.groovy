@@ -15,16 +15,13 @@ public class ParameterToDomainInstanceEditor extends PropertyEditorSupport {
 
     @Override
     public void setValue(Object value) {
-		println "Assigning to $domainClass from $value with class " + value?.class
-//        if (domainClass.isAssignableFrom(value.class)) {
-//            super.setValue(value)
-//			println "set value directly"
-//		}
-//        else
 		if (value instanceof JSONObject) {
             def instance = domainClass.get(value?.id)
             super.setValue(instance)
-			println "set value directly from json"
         }
+		else
+        	if (domainClass.isAssignableFrom(value.class))
+            	super.setValue(value)
+
     }
 }
