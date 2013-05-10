@@ -1,5 +1,5 @@
 
-<%@ page import="grails.restjs.Book" %>
+<%@ page import="grails.restjs.Book"%>
 <!doctype html>
 <html>
 <head>
@@ -22,18 +22,30 @@
 		margin-left: 60px;
 		margin-right: 60px;
 	}
-	.dgrid {border: 0}
+	.dgrid {
+		border: 0;
+		height: auto;
+	}
+	.dgrid .dgrid-scroller {
+		position: relative;
+		max-height: 600px;
+		overflow: auto;
+	}
 	.dgrid-cell-padding {padding: 8px;}
 	.dgrid-sortable {color: #0088cc;}
 	.dgrid-sortable:hover {text-decoration:underline;}
 	.dgrid-cell {border: 0}
-	#grid { height: 25em}
+	/*#grid { height: 25em}*/
 	#grid .field-id {width: 4em;}
 	#grid .field-name {width: 15em;}
 	#grid .field-edit {width: 3em;}
 	#grid .field-delete {width: 4em;}
 	.dijitSpinnerButtonContainer {height: 1.5em}
-	</style>
+
+
+	.dgrid-column-pubDate {
+		width: 250px; /* this column will use 200px */
+	}	</style>
 	<script>
 			var dojoConfig;
 			(function(){
@@ -98,7 +110,7 @@
 					name: editor({label: "Name", autoSave: "true"}, "text", "dblclick"),
 					price: editor({label: "Price", autoSave: "true"}, CurrencyTextBox, "dblclick"),
 					quantity: editor({label: "Qty", autoSave: "true", editorArgs: {style: 'width: 5em; height: 1.5em'}}, NumberSpinner),
-					pubDate: editor({label: "Pub Date", autoSave: "true"}, DateTextBox),
+					pubDate: editor({label: "Pub Date", autoSave: "true"}, DateTextBox, "dblclick"),
 					hardback: editor({label:'Hardback', autoSave: true}, "checkbox", "dblclick"),
 					edit: {label: 'Edit', sortable: false,
 						renderCell: function(obj, data, td, options) {
@@ -150,7 +162,7 @@
 	</script>
 </head>
 
-<body class="claro">
+<body>
 <section id="list-book" class="first">
 
 	<div id="grid" class="claro"></div>
@@ -158,7 +170,7 @@
 	%{--<button onclick='grid.save();'>Save</button>--}%
 	%{--<button onclick='grid.revert();'>Revert</button>--}%
 </section>
-
+<content tag="page.footer'"></content>
 </body>
 
 </html>

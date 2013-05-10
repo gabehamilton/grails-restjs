@@ -33,7 +33,7 @@
 	<%-- For Javascript see end of body --%>
 </head>
 
-<body>
+<body class="claro">
 	<g:render template="/_menu/navbar"/>														
 
 	<!-- Enable to overwrite Header by individual page -->
@@ -57,7 +57,7 @@
 	    <g:pageProperty name="page.footer" />
 	</g:if>
 	<g:else>
-		<g:render template="/layouts/footer"/>														
+		<g:render template="/layouts/footer"/>
 	</g:else>
 
 	<!-- Enable to insert additional components (e.g., modals, javascript, etc.) by any individual page -->
