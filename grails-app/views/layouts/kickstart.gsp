@@ -16,11 +16,19 @@
 	<link rel="apple-touch-icon"	href="assets/ico/apple-touch-icon.png">
     <link rel="apple-touch-icon"	href="assets/ico/apple-touch-icon-72x72.png"	sizes="72x72">
     <link rel="apple-touch-icon"	href="assets/ico/apple-touch-icon-114x114.png"	sizes="114x114">
-	
+
+
+
 	<%-- Manual switch for the skin can be found in /view/_menu/_config.gsp --%>
 	<r:require modules="jquery"/>
-	<r:require modules="${session.skin ? session.skin            : 'bootstrap'}"/>
-	<r:require modules="${session.skin ? session.skin + '_utils' : 'bootstrap_utils'}"/>
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
+	<script src="${request.contextPath}/js/kickstart.js"></script>
+	%{--<r:require modules="${session.skin ? session.skin            : 'bootstrap'}"/>--}%
+	%{--<r:require modules="${session.skin ? session.skin + '_utils' : 'bootstrap_utils'}"/>--}%
+
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.min.css" rel="stylesheet">
+	<link href="${request.contextPath}/css/kickstart.css" rel="stylesheet">
 
 	<r:layoutResources />
 	<g:layoutHead />
@@ -33,7 +41,7 @@
 	<%-- For Javascript see end of body --%>
 </head>
 
-<body class="claro">
+<body class="dbootstrap">
 	<g:render template="/_menu/navbar"/>														
 
 	<!-- Enable to overwrite Header by individual page -->
